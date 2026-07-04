@@ -203,6 +203,8 @@ input[type=range]{width:100%;accent-color:var(--violet);height:34px}
 @keyframes sway{0%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}100%{transform:rotate(-2.5deg)}}
 @keyframes lean{0%,100%{transform:translateX(0)}50%{transform:translateX(-8px)}}
 @keyframes bandStretch{0%,12%{transform:scaleX(1)}45%,60%{transform:scaleX(1.18)}92%,100%{transform:scaleX(1)}}
+@keyframes kfInv2{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(25deg)}92%,100%{transform:rotate(0deg)}}
+@keyframes kfEve2{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(-25deg)}92%,100%{transform:rotate(0deg)}}
 @keyframes arrowPulse{0%,100%{opacity:.25}50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){
   .anim-stage *{animation:none !important}
@@ -410,39 +412,37 @@ const ANIMS={
  </svg>`,
 
  inversionSVG:()=>`<svg viewBox="0 0 300 230">
-   <text x="150" y="24" text-anchor="middle" font-size="13" font-weight="800" fill="${SOFT}">FRONT VIEW</text>${GROUND}
-   <line x1="88" y1="62" x2="88" y2="172" stroke="${INK}" stroke-width="10" stroke-linecap="round" opacity=".25"/>
-   <path d="${fvFoot(88)}" fill="#C9CBE8"/>
-   <text x="88" y="216" text-anchor="middle" font-size="11" font-weight="700" fill="${SOFT}">other foot</text>
-   <line x1="185" y1="62" x2="185" y2="168" stroke="${VIO}" stroke-width="10" stroke-linecap="round"/>
-   <g style="transform-origin:185px 184px;animation:kfIn 2.8s ease-in-out infinite">
-     <path d="${fvFoot(185)}" fill="${VIO}"/>
+   <text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="${SOFT}">VIEWED FROM BEHIND</text>${GROUND}
+   <line x1="145" y1="40" x2="145" y2="203" stroke="${SOFT}" stroke-width="2" stroke-dasharray="4 5" opacity=".4"/>
+   <text x="264" y="34" text-anchor="end" font-size="10.5" font-weight="700" fill="${LIM}">green = sole</text>
+   <text x="90" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="${SOFT}">other foot</text>
+   <line x1="90" y1="95" x2="90" y2="140" stroke="#C9CBE8" stroke-width="9" stroke-linecap="round"/>
+   <path d="M78 140 L102 140 L122 203 L58 203 Z" fill="#DCD9EF"/>
+   <line x1="58" y1="203" x2="122" y2="203" stroke="#B7B2DC" stroke-width="5" stroke-linecap="round"/>
+   <line x1="200" y1="50" x2="200" y2="140" stroke="${VIO}" stroke-width="11" stroke-linecap="round"/>
+   <g style="transform-origin:200px 140px;animation:kfInv2 2.8s ease-in-out infinite">
+     <path d="M188 140 L212 140 L232 203 L168 203 Z" fill="${VIO}"/>
+     <line x1="168" y1="203" x2="232" y2="203" stroke="${LIM}" stroke-width="7" stroke-linecap="round"/>
    </g>
-   <g style="transform-origin:254px 184px;animation:bandStretch 2.8s ease-in-out infinite">
-     <line x1="206" y1="184" x2="252" y2="184" stroke="${LIM}" stroke-width="6" stroke-linecap="round"/>
-   </g>
-   <rect x="250" y="150" width="10" height="53" rx="3" fill="${INK}" opacity=".5"/>
-   <text x="255" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="${LIM}">anchor</text>
-   <path d="M206 150 Q178 132 148 142 M148 142 L162 132 M148 142 L162 150" stroke="${LIM}" stroke-width="5" stroke-linecap="round" fill="none" style="animation:arrowPulse 2.8s ease-in-out infinite"/>
-   ${CAP('Tilt the sole IN, towards your other foot — band anchored outside')}
+   <path d="M222 104 Q248 108 246 132 M246 132 L237 128 M246 132 L242 138" stroke="${LIM}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" style="animation:arrowPulse 2.8s ease-in-out infinite"/>
+   ${CAP('Ankle rolls so the sole (green) tilts toward your other foot')}
  </svg>`,
 
  eversionSVG:()=>`<svg viewBox="0 0 300 230">
-   <text x="150" y="24" text-anchor="middle" font-size="13" font-weight="800" fill="${SOFT}">FRONT VIEW</text>${GROUND}
-   <line x1="70" y1="62" x2="70" y2="172" stroke="${INK}" stroke-width="10" stroke-linecap="round" opacity=".25"/>
-   <path d="${fvFoot(70)}" fill="#C9CBE8"/>
-   <text x="70" y="216" text-anchor="middle" font-size="11" font-weight="700" fill="${SOFT}">other foot</text>
-   <line x1="200" y1="62" x2="200" y2="168" stroke="${VIO}" stroke-width="10" stroke-linecap="round"/>
-   <g style="transform-origin:200px 184px;animation:kfOut 2.8s ease-in-out infinite">
-     <path d="${fvFoot(200)}" fill="${VIO}"/>
+   <text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="${SOFT}">VIEWED FROM BEHIND</text>${GROUND}
+   <line x1="145" y1="40" x2="145" y2="203" stroke="${SOFT}" stroke-width="2" stroke-dasharray="4 5" opacity=".4"/>
+   <text x="264" y="34" text-anchor="end" font-size="10.5" font-weight="700" fill="${LIM}">green = sole</text>
+   <text x="90" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="${SOFT}">other foot</text>
+   <line x1="90" y1="95" x2="90" y2="140" stroke="#C9CBE8" stroke-width="9" stroke-linecap="round"/>
+   <path d="M78 140 L102 140 L122 203 L58 203 Z" fill="#DCD9EF"/>
+   <line x1="58" y1="203" x2="122" y2="203" stroke="#B7B2DC" stroke-width="5" stroke-linecap="round"/>
+   <line x1="200" y1="50" x2="200" y2="140" stroke="${VIO}" stroke-width="11" stroke-linecap="round"/>
+   <g style="transform-origin:200px 140px;animation:kfEve2 2.8s ease-in-out infinite">
+     <path d="M188 140 L212 140 L232 203 L168 203 Z" fill="${VIO}"/>
+     <line x1="168" y1="203" x2="232" y2="203" stroke="${LIM}" stroke-width="7" stroke-linecap="round"/>
    </g>
-   <g style="transform-origin:132px 184px;animation:bandStretch 2.8s ease-in-out infinite">
-     <line x1="178" y1="184" x2="134" y2="184" stroke="${LIM}" stroke-width="6" stroke-linecap="round"/>
-   </g>
-   <rect x="126" y="150" width="10" height="53" rx="3" fill="${INK}" opacity=".5"/>
-   <text x="131" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="${LIM}">anchor</text>
-   <path d="M196 148 Q226 132 254 144 M254 144 L240 134 M254 144 L240 152" stroke="${LIM}" stroke-width="5" stroke-linecap="round" fill="none" style="animation:arrowPulse 2.8s ease-in-out infinite"/>
-   ${CAP('Tilt the sole OUT, away from your other foot — band anchored inside')}
+   <path d="M222 132 Q248 128 246 104 M246 104 L237 108 M246 104 L242 98" stroke="${LIM}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" style="animation:arrowPulse 2.8s ease-in-out infinite"/>
+   ${CAP('Ankle rolls so the sole (green) tilts away from your other foot')}
  </svg>`,
 
  balanceSVG:()=>`<svg viewBox="0 0 300 230">${GROUND}
