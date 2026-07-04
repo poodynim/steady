@@ -6,6 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>STEADY — Ankle Rehab</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <style>
 :root{
   --bg:#F6F5FF;
@@ -192,8 +195,8 @@ input[type=range]{width:100%;accent-color:var(--violet);height:34px}
 .wd.part i{background:linear-gradient(135deg,var(--amber),#FFD37E);color:#6B4A00}
 
 /* ---------- animations ---------- */
-@keyframes kfCalf{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(-22deg)}92%,100%{transform:rotate(0deg)}}
-@keyframes kfCalfShin{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(22deg)}92%,100%{transform:rotate(0deg)}}
+@keyframes kfCalf{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(22deg)}92%,100%{transform:rotate(0deg)}}
+@keyframes kfCalfShin{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(-22deg)}92%,100%{transform:rotate(0deg)}}
 @keyframes kfToe{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(-16deg)}92%,100%{transform:rotate(0deg)}}
 @keyframes kfIn{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(-26deg)}92%,100%{transform:rotate(0deg)}}
 @keyframes kfOut{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(26deg)}92%,100%{transform:rotate(0deg)}}
@@ -622,6 +625,7 @@ function startSession(){
 }
 function renderStep(){
   clearInterval(sess.timer);
+  setTimeout(()=>{try{const tz=document.getElementById('action-btn');if(tz&&tz.scrollIntoView)tz.scrollIntoView({block:'nearest'});}catch(e){}},50);
   const ex=EXERCISES[sess.ex];
   $('sess-prog').textContent='Exercise '+(sess.ex+1)+' of '+EXERCISES.length;
   const track=$('seg-track');track.innerHTML='';
@@ -673,6 +677,7 @@ function setComplete(){
 }
 function startRest(nextEx){
   clearInterval(sess.timer);
+  setTimeout(()=>{try{const sb=document.getElementById('skip-btn');if(sb&&sb.scrollIntoView)sb.scrollIntoView({block:'nearest'});}catch(e){}},50);
   sess.remaining=REST_SECS;
   const t=$('big-timer');t.style.display='block';t.classList.add('resting');t.textContent=sess.remaining;
   $('timer-label').textContent=nextEx?'Rest — next exercise coming up':'Rest — next set coming up';
