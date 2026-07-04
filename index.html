@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>STEADY — Ankle Rehab</title>
+<style>
+:root{
+  --bg:#F6F5FF;
+  --card:#FFFFFF;
+  --ink:#221A3F;
+  --ink-soft:#6E679B;
+  --violet:#6C3BFF;
+  --violet-deep:#4A21C9;
+  --lime:#C9F24B;
+  --lime-deep:#8FBE0F;
+  --coral:#FF6058;
+  --amber:#FFB020;
+  --aqua:#3EDBD3;
+  --radius:22px;
+  --shadow:0 10px 30px rgba(76,42,180,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:ui-rounded,-apple-system,"SF Pro Rounded",system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  overscroll-behavior:none;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+button{font:inherit;border:0;cursor:pointer;background:none;color:inherit}
+.screen{display:none;min-height:100dvh;flex-direction:column;padding:max(20px,env(safe-area-inset-top)) 20px 32px}
+.screen.active{display:flex}
+
+/* ---------- HOME ---------- */
+.top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.logo{font-size:26px;font-weight:800;letter-spacing:.06em}
+.logo em{font-style:normal;color:var(--violet)}
+.streak-pill{
+  display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,#FF6058,#FFB020);
+  color:#fff;font-weight:800;font-size:17px;padding:8px 15px;border-radius:99px;
+  box-shadow:0 6px 18px rgba(255,96,88,.35);
+}
+.streak-pill svg{width:18px;height:18px}
+.greeting{font-size:15px;color:var(--ink-soft);font-weight:600;margin-bottom:18px}
+
+.ring-card{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:22px;display:flex;align-items:center;gap:20px;margin-bottom:16px;
+}
+.ring-wrap{position:relative;width:110px;height:110px;flex-shrink:0}
+.ring-wrap svg{width:110px;height:110px;transform:rotate(-90deg)}
+.ring-bg{stroke:#EDEAFB}
+.ring-fg{stroke:url(#ringGrad);stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-center b{font-size:24px;font-weight:800}
+.ring-center span{font-size:11px;color:var(--ink-soft);font-weight:700}
+.ring-info h2{font-size:19px;font-weight:800;margin-bottom:4px}
+.ring-info p{font-size:14px;color:var(--ink-soft);font-weight:600;line-height:1.4}
+
+.cta{
+  display:block;width:100%;text-align:center;
+  background:linear-gradient(135deg,var(--violet),#9B6BFF);
+  color:#fff;font-size:19px;font-weight:800;padding:18px;border-radius:20px;
+  box-shadow:0 12px 26px rgba(108,59,255,.38);
+  transition:transform .12s ease;
+  margin-bottom:22px;
+}
+.cta:active{transform:scale(.97)}
+.cta.done-state{background:linear-gradient(135deg,var(--lime-deep),#5FA800);box-shadow:0 12px 26px rgba(143,190,15,.35)}
+
+.week-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:16px}
+.week-card h3,.list-head{font-size:13px;font-weight:800;letter-spacing:.09em;color:var(--ink-soft);text-transform:uppercase;margin-bottom:14px}
+.week-dots{display:flex;justify-content:space-between}
+.wd{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--ink-soft)}
+.wd i{width:32px;height:32px;border-radius:50%;background:#EDEAFB;display:flex;align-items:center;justify-content:center;font-style:normal}
+.wd.hit i{background:linear-gradient(135deg,var(--lime),#A8E016);color:#3A5200}
+.wd.today i{outline:2.5px solid var(--violet);outline-offset:2px}
+
+.moto{
+  background:linear-gradient(135deg,#221A3F,#3B2A73);color:#fff;border-radius:var(--radius);
+  padding:20px 22px;font-size:16px;font-weight:700;line-height:1.45;margin-bottom:22px;
+  position:relative;overflow:hidden;
+}
+.moto::after{content:"“";position:absolute;right:14px;top:-18px;font-size:110px;color:rgba(255,255,255,.08);font-weight:800}
+
+.ex-list{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
+.ex-row{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:14px 16px;display:flex;align-items:center;gap:14px}
+.ex-row .dot{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ex-row h4{font-size:15px;font-weight:800}
+.ex-row p{font-size:12.5px;color:var(--ink-soft);font-weight:600}
+.band-tag{margin-left:auto;background:#F0E9FF;color:var(--violet);font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:99px;letter-spacing:.04em;flex-shrink:0}
+
+.stats-row{display:flex;gap:10px;margin-bottom:8px}
+.stat{flex:1;background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:16px 8px;text-align:center}
+.stat b{font-size:22px;font-weight:800;display:block}
+.stat span{font-size:11px;color:var(--ink-soft);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+
+/* pain trend */
+.trend-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-top:14px}
+.trend-empty{font-size:13.5px;color:var(--ink-soft);font-weight:600;text-align:center;padding:10px 0}
+.trend-bars{display:flex;align-items:flex-end;gap:6px;height:80px}
+.tb{flex:1;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,var(--aqua),#7BE9E3);min-height:6px}
+.tb.hi{background:linear-gradient(180deg,var(--coral),#FF9B96)}
+.tb.mid{background:linear-gradient(180deg,var(--amber),#FFD37E)}
+.trend-lbl{display:flex;gap:6px;margin-top:6px}
+.trend-lbl span{flex:1;text-align:center;font-size:9.5px;color:var(--ink-soft);font-weight:700}
+
+/* ---------- SESSION ---------- */
+.sess-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sess-head button{font-size:15px;font-weight:800;color:var(--ink-soft);padding:8px}
+.sess-prog{font-size:14px;font-weight:800;color:var(--violet)}
+.seg-track{display:flex;gap:5px;margin-bottom:22px}
+.seg{flex:1;height:6px;border-radius:99px;background:#E3DEF7}
+.seg.done{background:linear-gradient(90deg,var(--violet),var(--aqua))}
+.seg.now{background:var(--amber)}
+
+.anim-stage{
+  background:var(--card);border-radius:26px;box-shadow:var(--shadow);
+  padding:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;
+  min-height:230px;position:relative;overflow:hidden;
+}
+.anim-stage svg{width:100%;max-width:300px;height:auto}
+.set-chip{
+  position:absolute;top:14px;left:14px;background:var(--ink);color:#fff;
+  font-size:12.5px;font-weight:800;padding:6px 12px;border-radius:99px;
+}
+.band-chip{
+  position:absolute;top:14px;right:14px;background:var(--lime);color:#3A5200;
+  font-size:12.5px;font-weight:800;padding:6px 12px;border-radius:99px;
+}
+.ex-title{font-size:24px;font-weight:800;margin-bottom:6px}
+.ex-target{font-size:15px;font-weight:700;color:var(--violet);margin-bottom:12px}
+.ex-notes{background:#EFEBFF;border-radius:16px;padding:14px 16px;margin-bottom:20px}
+.ex-notes li{font-size:14px;font-weight:600;color:#4A3F87;line-height:1.5;margin-left:18px}
+.ex-notes li+li{margin-top:5px}
+
+.timer-zone{margin-top:auto;text-align:center}
+.big-timer{font-size:76px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:14px}
+.big-timer.resting{color:var(--aqua)}
+.timer-label{font-size:14px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px}
+.btn-primary{
+  display:block;width:100%;background:linear-gradient(135deg,var(--violet),#9B6BFF);color:#fff;
+  font-size:18px;font-weight:800;padding:17px;border-radius:18px;
+  box-shadow:0 10px 24px rgba(108,59,255,.35);transition:transform .12s;
+}
+.btn-primary:active{transform:scale(.97)}
+.btn-primary.lime{background:linear-gradient(135deg,#A8E016,var(--lime-deep));color:#243600;box-shadow:0 10px 24px rgba(143,190,15,.35)}
+.btn-ghost{display:block;width:100%;font-size:15px;font-weight:800;color:var(--ink-soft);padding:14px;margin-top:6px}
+
+/* ---------- COMPLETE ---------- */
+#screen-done{justify-content:center;text-align:center;position:relative}
+.done-emoji{font-size:74px;margin-bottom:10px}
+.done-h{font-size:30px;font-weight:800;margin-bottom:8px}
+.done-p{font-size:16px;font-weight:600;color:var(--ink-soft);margin-bottom:30px;line-height:1.5}
+.pain-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:24px;text-align:left}
+.pain-card h3{font-size:16px;font-weight:800;margin-bottom:4px}
+.pain-card p{font-size:13px;color:var(--ink-soft);font-weight:600;margin-bottom:16px}
+.pain-val{font-size:34px;font-weight:800;text-align:center;margin-bottom:6px}
+input[type=range]{width:100%;accent-color:var(--violet);height:34px}
+.pain-scale{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--ink-soft)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+
+
+.side-chip{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:14px;font-weight:800;padding:7px 18px;border-radius:99px;color:#fff;background:var(--aqua);letter-spacing:.05em;box-shadow:0 4px 12px rgba(62,219,211,.4)}
+.side-chip.right{background:var(--coral);box-shadow:0 4px 12px rgba(255,96,88,.4)}
+.side-chip.both{background:var(--lime);color:#3A5200;box-shadow:0 4px 12px rgba(201,242,75,.5)}
+/* ---------- preview modal & facts ---------- */
+.ex-row{cursor:pointer;transition:transform .1s}
+.ex-row:active{transform:scale(.97)}
+.ex-row .time-tag{margin-left:auto;font-size:12px;font-weight:800;color:var(--ink-soft);flex-shrink:0}
+.ex-row .chev{color:#C9C4E6;font-size:18px;font-weight:800;margin-left:8px}
+.modal-back{position:fixed;inset:0;background:rgba(34,26,63,.55);backdrop-filter:blur(4px);z-index:90;display:none;align-items:flex-end}
+.modal-back.open{display:flex}
+.modal-card{background:var(--card);border-radius:28px 28px 0 0;width:100%;max-height:88dvh;overflow-y:auto;padding:22px 22px calc(28px + env(safe-area-inset-bottom));animation:slideUp .28s ease}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+.modal-grab{width:44px;height:5px;border-radius:99px;background:#E3DEF7;margin:0 auto 16px}
+.modal-anim{background:var(--bg);border-radius:20px;padding:8px;margin-bottom:16px}
+.modal-anim svg{width:100%;height:auto}
+.modal-meta{display:flex;gap:8px;margin:10px 0 14px;flex-wrap:wrap}
+.meta-pill{background:#F0E9FF;color:var(--violet);font-size:12.5px;font-weight:800;padding:6px 12px;border-radius:99px}
+.meta-pill.lime{background:#EDF9C8;color:#5B7A00}
+.fact-card{background:linear-gradient(135deg,#EAFBFA,#E4F0FF);border-radius:16px;padding:13px 16px;margin-bottom:18px;display:flex;gap:10px;align-items:flex-start}
+.fact-card .fc-i{font-size:18px;flex-shrink:0}
+.fact-card p{font-size:13.5px;font-weight:600;color:#215B57;line-height:1.45}
+.btn-skipex{display:block;width:100%;font-size:14px;font-weight:800;color:var(--coral);padding:12px;margin-top:2px}
+.wd.part i{background:linear-gradient(135deg,var(--amber),#FFD37E);color:#6B4A00}
+
+/* ---------- animations ---------- */
+@keyframes kfCalf{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(-22deg)}92%,100%{transform:rotate(0deg)}}
+@keyframes kfCalfShin{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(22deg)}92%,100%{transform:rotate(0deg)}}
+@keyframes kfToe{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(-16deg)}92%,100%{transform:rotate(0deg)}}
+@keyframes kfIn{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(-26deg)}92%,100%{transform:rotate(0deg)}}
+@keyframes kfOut{0%,12%{transform:rotate(0deg)}45%,60%{transform:rotate(26deg)}92%,100%{transform:rotate(0deg)}}
+@keyframes sway{0%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}100%{transform:rotate(-2.5deg)}}
+@keyframes lean{0%,100%{transform:translateX(0)}50%{transform:translateX(-8px)}}
+@keyframes bandStretch{0%,12%{transform:scaleX(1)}45%,60%{transform:scaleX(1.18)}92%,100%{transform:scaleX(1)}}
+@keyframes arrowPulse{0%,100%{opacity:.25}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){
+  .anim-stage *{animation:none !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<div class="screen active" id="screen-home">
+  <div class="top-row">
+    <div class="logo">STE<em>A</em>DY</div>
+    <div class="streak-pill">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 4-3 6-3 9a3 3 0 0 0 6 .2c1.6 1.3 2 3 1.6 4.8 2.3-1.4 3.4-3.7 3.4-6C20 6 15 4.5 12 2zM12 22c-3.9 0-7-2.6-7-6.4 0-2.3 1.2-4.2 2.6-5.6-.1 3.5 2 4.6 2 7a2.4 2.4 0 0 0 4.8 0c0-1.2-.5-2-.5-2 2.5 1 5.1 3 5.1 5.5C19 20.3 15.9 22 12 22z" opacity="0"/><path d="M13.5 1.5S15 4 15 6.5c0 1.8-1.2 3-2.7 3S9.7 8.4 9.7 6.6c0-.4.05-.8.15-1.2C7.3 7.2 5 10.2 5 13.5 5 18.2 8.6 21.5 12 21.5s7-3.3 7-8c0-4.6-3.3-8.9-5.5-12z"/></svg>
+      <span id="streak-num">0</span>
+    </div>
+  </div>
+  <div class="greeting" id="greeting">Let's keep those ankles happy</div>
+
+  <div class="ring-card">
+    <div class="ring-wrap">
+      <svg viewBox="0 0 110 110">
+        <defs>
+          <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#6C3BFF"/><stop offset="100%" stop-color="#3EDBD3"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring-bg" cx="55" cy="55" r="47" fill="none" stroke-width="11"/>
+        <circle class="ring-fg" id="ring-fg" cx="55" cy="55" r="47" fill="none" stroke-width="11"
+          stroke-dasharray="295.3" stroke-dashoffset="295.3"/>
+      </svg>
+      <div class="ring-center"><b id="ring-pct">0%</b><span>today</span></div>
+    </div>
+    <div class="ring-info">
+      <h2 id="ring-title">Today's session</h2>
+      <p id="ring-sub">Little and often beats big and rare.</p>
+    </div>
+  </div>
+
+  <button class="cta" id="start-btn">Start today's session</button>
+
+  <div class="week-card">
+    <h3>This week</h3>
+    <div class="week-dots" id="week-dots"></div>
+  </div>
+
+  <div class="moto" id="moto-text"></div>
+
+  <div class="stats-row">
+    <div class="stat"><b id="stat-total">0</b><span>sessions</span></div>
+    <div class="stat"><b id="stat-best">0</b><span>best streak</span></div>
+    <div class="stat"><b id="stat-mins">0</b><span>minutes</span></div>
+  </div>
+
+  <div class="trend-card">
+    <h3 class="list-head" style="margin-bottom:10px">Pain trend (last 14 sessions)</h3>
+    <div id="trend-body"></div>
+  </div>
+
+  <div style="height:20px"></div>
+  <h3 class="list-head">The plan</h3>
+  <div class="ex-list" id="ex-list"></div>
+</div>
+
+<!-- ============ SESSION ============ -->
+<div class="screen" id="screen-session">
+  <div class="sess-head">
+    <button id="quit-btn">✕ Quit</button>
+    <div class="sess-prog" id="sess-prog">Exercise 1 of 7</div>
+    <div style="width:52px"></div>
+  </div>
+  <div class="seg-track" id="seg-track"></div>
+
+  <div class="anim-stage" id="anim-stage">
+    <div class="set-chip" id="set-chip">Set 1 of 3</div>
+    <div class="band-chip" id="band-chip" style="display:none">🟢 Band</div>
+    <div id="anim-holder"></div>
+    <div class="side-chip" id="side-chip">LEFT ankle</div>
+  </div>
+
+  <h2 class="ex-title" id="ex-title"></h2>
+  <div class="ex-target" id="ex-target"></div>
+  <ul class="ex-notes" id="ex-notes"></ul>
+  <div class="fact-card"><div class="fc-i">&#128161;</div><p id="fact-text"></p></div>
+
+  <div class="timer-zone">
+    <div class="big-timer" id="big-timer" style="display:none">30</div>
+    <div class="timer-label" id="timer-label"></div>
+    <button class="btn-primary" id="action-btn">Start hold</button>
+    <button class="btn-ghost" id="skip-btn">Skip rest</button>
+    <button class="btn-skipex" id="skipex-btn">Skip this exercise &#8594;</button>
+  </div>
+</div>
+
+<!-- ============ COMPLETE ============ -->
+<div class="screen" id="screen-done">
+  <canvas id="confetti"></canvas>
+  <div class="done-emoji">🎉</div>
+  <div class="done-h" id="done-h">Session complete!</div>
+  <div class="done-p" id="done-p"></div>
+  <div class="pain-card">
+    <h3>How do the ankles feel?</h3>
+    <p>Log it so you can show your doctor real progress.</p>
+    <div class="pain-val" id="pain-val">3</div>
+    <input type="range" min="0" max="10" value="3" id="pain-slider">
+    <div class="pain-scale"><span>0 · no pain</span><span>10 · worst</span></div>
+  </div>
+  <button class="btn-primary lime" id="save-btn">Save & finish</button>
+</div>
+
+<div class="modal-back" id="modal-back">
+  <div class="modal-card">
+    <div class="modal-grab"></div>
+    <div class="modal-anim" id="modal-anim"></div>
+    <h2 class="ex-title" id="modal-title"></h2>
+    <div class="modal-meta" id="modal-meta"></div>
+    <ul class="ex-notes" id="modal-notes"></ul>
+    <button class="btn-primary" id="modal-close">Got it</button>
+  </div>
+</div>
+<script>
+/* ================= DATA ================= */
+const EXERCISES=[
+ {id:'calfraise',bilateral:true,name:'Calf raises',emoji:'🦵',type:'reps',reps:20,sets:3,band:false,anim:'calfRaiseSVG',
+  notes:['Stand tall, hands on a wall or counter for balance','Both feet at the same time \u2014 push up onto the balls of your feet','Lower down over 2–3 seconds — the lowering is where the magic happens']},
+ {id:'calfstretch',name:'Calf stretch (wall)',emoji:'🧱',type:'hold',secs:30,sets:3,band:false,anim:'calfStretchSVG',
+  notes:['Hands on the wall, step one foot well back','Keep the back heel flat on the floor, back knee straight','Lean in until you feel the stretch in the calf — no bouncing']},
+ {id:'toeraise',bilateral:true,name:'Tibialis raises (toe raises)',emoji:'🦶',type:'reps',reps:20,sets:3,band:false,anim:'toeRaiseSVG',
+  notes:['Stand with heels on the floor, lean back slightly against a wall','Both feet at the same time \u2014 lift toes and forefoot towards your shins','Lower slowly — this builds the muscle down the front of your shin']},
+ {id:'inversion',name:'Ankle inversion',emoji:'↩️',type:'reps',reps:20,sets:3,band:true,anim:'inversionSVG',
+  notes:['Sit down, loop the resistance band around your forefoot','Anchor the band to the OUTSIDE (table leg or your other foot)','Turn the sole of your foot inwards against the band','Keep the movement at the ankle — don\u2019t twist the whole leg']},
+ {id:'eversion',name:'Ankle eversion',emoji:'↪️',type:'reps',reps:20,sets:3,band:true,anim:'eversionSVG',
+  notes:['Sit down, loop the resistance band around your forefoot','Anchor the band to the INSIDE this time','Turn the sole of your foot outwards against the band','Slow and controlled both ways']},
+ {id:'proprio',name:'Single-leg balance (eyes closed)',emoji:'\ud83d\ude48',type:'hold',secs:30,sets:3,band:false,anim:'proprioSVG',
+  notes:['Stand on one leg next to a wall or counter \u2014 safety first','Soft knee, tall posture, eyes on a fixed point \u2014 then close them','This retrains the position sensors in your ankle \u2014 wobbling IS the exercise working','Touch down and reset whenever you need']}
+];
+const REST_SECS=20;
+const MOTOS=[
+ 'Ankles don\u2019t heal in a day. They heal in daily.',
+ 'Every rep is a message to your ankle: we\u2019re rebuilding.',
+ 'The best rehab plan is the one you actually do. Like today.',
+ 'Wobbles are just your balance getting an education.',
+ 'Strong feet, strong foundations. Everything stacks on top.',
+ 'Future you is already grateful for this session.',
+ 'Consistency is boring. Results are not.',
+ 'You showed up. That\u2019s 80% of physiotherapy.',
+ 'Small hinges swing big doors. Small muscles carry whole bodies.',
+ 'One session at a time. One steady step at a time.'
+];
+const DONE_MSGS=[
+ 'Your ankles owe you one. Same time tomorrow?',
+ 'That\u2019s another brick in the wall of bulletproof ankles.',
+ 'Doctor\u2019s orders: followed. Feeling smug: allowed.',
+ 'Balance improved, calves fired, box ticked.',
+ 'Rehab done. Go reward yourself (walking there counts as extra credit).'
+];
+
+/* ================= SVG ANIMS ================= */
+const INK='#221A3F',VIO='#6C3BFF',LIM='#8FBE0F',AQ='#3EDBD3',SOFT='#6E679B';
+// side-view foot, toes pointing right, ground at y=201
+const FOOT='M112 201 L112 176 Q112 161 127 160 L141 162 L147 184 Q150 191 159 193 L191 196 Q199 198 197 201 Z';
+const CAP=t=>`<text x="150" y="224" text-anchor="middle" font-size="13" font-weight="700" fill="${SOFT}">${t}</text>`;
+const GROUND=`<line x1="36" y1="203" x2="264" y2="203" stroke="${INK}" stroke-width="6" stroke-linecap="round" opacity=".12"/>`;
+const UPARROW=(x,y)=>`<path d="M${x} ${y} L${x} ${y-34} M${x-9} ${y-22} L${x} ${y-34} L${x+9} ${y-22}" stroke="${LIM}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" style="animation:arrowPulse 2.6s ease-in-out infinite"/>`;
+const fvFoot=(x,fill)=>`M${x-22} 199 L${x+22} 199 L${x+15} 170 L${x-15} 170 Z`;
+
+const ANIMS={
+ calfRaiseSVG:()=>`<svg viewBox="0 0 300 230">${GROUND}
+   <g style="transform-origin:183px 199px;animation:kfCalf 2.6s ease-in-out infinite">
+     <path d="${FOOT}" fill="${VIO}"/>
+     <g style="transform-origin:128px 160px;animation:kfCalfShin 2.6s ease-in-out infinite">
+       <line x1="128" y1="162" x2="128" y2="56" stroke="${VIO}" stroke-width="11" stroke-linecap="round"/>
+       <path d="M123 90 Q106 116 121 148" stroke="${LIM}" stroke-width="6" stroke-linecap="round" fill="none"/>
+     </g>
+   </g>
+   ${UPARROW(92,178)}
+   ${CAP('Heels lift up — pivot on the balls of your feet')}
+ </svg>`,
+
+ calfStretchSVG:()=>`<svg viewBox="0 0 300 230">${GROUND}
+   <rect x="44" y="26" width="12" height="177" rx="3" fill="#D9D4F2"/>
+   <line x1="47" y1="42" x2="53" y2="34" stroke="${SOFT}" stroke-width="2"/><line x1="47" y1="82" x2="53" y2="74" stroke="${SOFT}" stroke-width="2"/><line x1="47" y1="122" x2="53" y2="114" stroke="${SOFT}" stroke-width="2"/><line x1="47" y1="162" x2="53" y2="154" stroke="${SOFT}" stroke-width="2"/>
+   <g style="animation:lean 2.8s ease-in-out infinite">
+     <circle cx="112" cy="52" r="14" stroke="${VIO}" stroke-width="7" fill="none"/>
+     <line x1="119" y1="65" x2="150" y2="122" stroke="${VIO}" stroke-width="9" stroke-linecap="round"/>
+     <line x1="124" y1="74" x2="58" y2="88" stroke="${VIO}" stroke-width="7" stroke-linecap="round"/>
+     <path d="M150 122 L124 158 L112 196" stroke="${VIO}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+     <line x1="112" y1="199" x2="88" y2="199" stroke="${VIO}" stroke-width="8" stroke-linecap="round"/>
+     <line x1="150" y1="122" x2="200" y2="190" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+     <line x1="204" y1="199" x2="176" y2="199" stroke="${INK}" stroke-width="8" stroke-linecap="round"/>
+     <path d="M178 160 L196 184" stroke="${LIM}" stroke-width="6" stroke-linecap="round"/>
+     <circle cx="204" cy="196" r="8" fill="none" stroke="#FF6058" stroke-width="4" style="animation:arrowPulse 2.8s ease-in-out infinite"/>
+   </g>
+   ${CAP('Back leg straight, lean to the wall — back heel stays glued down')}
+ </svg>`,
+
+ toeRaiseSVG:()=>`<svg viewBox="0 0 300 230">${GROUND}
+   <line x1="128" y1="162" x2="128" y2="56" stroke="${VIO}" stroke-width="11" stroke-linecap="round"/>
+   <line x1="134" y1="92" x2="134" y2="144" stroke="${LIM}" stroke-width="6" stroke-linecap="round"/>
+   <g style="transform-origin:119px 197px;animation:kfToe 2.6s ease-in-out infinite">
+     <path d="${FOOT}" fill="${VIO}"/>
+   </g>
+   ${UPARROW(206,168)}
+   ${CAP('Toes lift towards your shin — heel stays planted')}
+ </svg>`,
+
+ inversionSVG:()=>`<svg viewBox="0 0 300 230">
+   <text x="150" y="24" text-anchor="middle" font-size="13" font-weight="800" fill="${SOFT}">FRONT VIEW</text>${GROUND}
+   <line x1="88" y1="62" x2="88" y2="172" stroke="${INK}" stroke-width="10" stroke-linecap="round" opacity=".25"/>
+   <path d="${fvFoot(88)}" fill="#C9CBE8"/>
+   <text x="88" y="216" text-anchor="middle" font-size="11" font-weight="700" fill="${SOFT}">other foot</text>
+   <line x1="185" y1="62" x2="185" y2="168" stroke="${VIO}" stroke-width="10" stroke-linecap="round"/>
+   <g style="transform-origin:185px 184px;animation:kfIn 2.8s ease-in-out infinite">
+     <path d="${fvFoot(185)}" fill="${VIO}"/>
+   </g>
+   <g style="transform-origin:254px 184px;animation:bandStretch 2.8s ease-in-out infinite">
+     <line x1="206" y1="184" x2="252" y2="184" stroke="${LIM}" stroke-width="6" stroke-linecap="round"/>
+   </g>
+   <rect x="250" y="150" width="10" height="53" rx="3" fill="${INK}" opacity=".5"/>
+   <text x="255" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="${LIM}">anchor</text>
+   <path d="M206 150 Q178 132 148 142 M148 142 L162 132 M148 142 L162 150" stroke="${LIM}" stroke-width="5" stroke-linecap="round" fill="none" style="animation:arrowPulse 2.8s ease-in-out infinite"/>
+   ${CAP('Tilt the sole IN, towards your other foot — band anchored outside')}
+ </svg>`,
+
+ eversionSVG:()=>`<svg viewBox="0 0 300 230">
+   <text x="150" y="24" text-anchor="middle" font-size="13" font-weight="800" fill="${SOFT}">FRONT VIEW</text>${GROUND}
+   <line x1="70" y1="62" x2="70" y2="172" stroke="${INK}" stroke-width="10" stroke-linecap="round" opacity=".25"/>
+   <path d="${fvFoot(70)}" fill="#C9CBE8"/>
+   <text x="70" y="216" text-anchor="middle" font-size="11" font-weight="700" fill="${SOFT}">other foot</text>
+   <line x1="200" y1="62" x2="200" y2="168" stroke="${VIO}" stroke-width="10" stroke-linecap="round"/>
+   <g style="transform-origin:200px 184px;animation:kfOut 2.8s ease-in-out infinite">
+     <path d="${fvFoot(200)}" fill="${VIO}"/>
+   </g>
+   <g style="transform-origin:132px 184px;animation:bandStretch 2.8s ease-in-out infinite">
+     <line x1="178" y1="184" x2="134" y2="184" stroke="${LIM}" stroke-width="6" stroke-linecap="round"/>
+   </g>
+   <rect x="126" y="150" width="10" height="53" rx="3" fill="${INK}" opacity=".5"/>
+   <text x="131" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="${LIM}">anchor</text>
+   <path d="M196 148 Q226 132 254 144 M254 144 L240 134 M254 144 L240 152" stroke="${LIM}" stroke-width="5" stroke-linecap="round" fill="none" style="animation:arrowPulse 2.8s ease-in-out infinite"/>
+   ${CAP('Tilt the sole OUT, away from your other foot — band anchored inside')}
+ </svg>`,
+
+ balanceSVG:()=>`<svg viewBox="0 0 300 230">${GROUND}
+   <g style="transform-origin:150px 200px;animation:sway 3s ease-in-out infinite">
+     <circle cx="150" cy="42" r="15" stroke="${VIO}" stroke-width="7" fill="none"/>
+     <line x1="150" y1="57" x2="150" y2="120" stroke="${VIO}" stroke-width="9" stroke-linecap="round"/>
+     <line x1="150" y1="74" x2="104" y2="86" stroke="${VIO}" stroke-width="7" stroke-linecap="round"/>
+     <line x1="150" y1="74" x2="196" y2="86" stroke="${VIO}" stroke-width="7" stroke-linecap="round"/>
+     <line x1="150" y1="120" x2="150" y2="192" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+     <line x1="146" y1="199" x2="178" y2="199" stroke="${INK}" stroke-width="8" stroke-linecap="round"/>
+     <path d="M150 120 L126 148 L138 176" stroke="${INK}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+   </g>
+   <path d="M108 190 Q100 182 104 172" stroke="${AQ}" stroke-width="4" stroke-linecap="round" fill="none" style="animation:arrowPulse 3s ease-in-out infinite"/>
+   <path d="M212 190 Q220 182 216 172" stroke="${AQ}" stroke-width="4" stroke-linecap="round" fill="none" style="animation:arrowPulse 3s ease-in-out infinite"/>
+   ${CAP('One leg, arms out, eyes on a fixed point — small wobbles are fine')}
+ </svg>`,
+
+ proprioSVG:()=>`<svg viewBox="0 0 300 230">${GROUND}
+   <g style="transform-origin:150px 200px;animation:sway 2.2s ease-in-out infinite">
+     <circle cx="150" cy="42" r="15" stroke="${VIO}" stroke-width="7" fill="none"/>
+     <path d="M142 42 q4 4 8 0 M154 42 q4 4 8 0" stroke="${INK}" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+     <line x1="150" y1="57" x2="150" y2="120" stroke="${VIO}" stroke-width="9" stroke-linecap="round"/>
+     <line x1="150" y1="74" x2="104" y2="86" stroke="${VIO}" stroke-width="7" stroke-linecap="round"/>
+     <line x1="150" y1="74" x2="196" y2="86" stroke="${VIO}" stroke-width="7" stroke-linecap="round"/>
+     <line x1="150" y1="120" x2="150" y2="192" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+     <line x1="146" y1="199" x2="178" y2="199" stroke="${INK}" stroke-width="8" stroke-linecap="round"/>
+     <path d="M150 120 L126 148 L138 176" stroke="${INK}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+   </g>
+   <text x="228" y="56" font-size="22">🙈</text>
+   <text x="66" y="56" font-size="13" font-weight="800" fill="${SOFT}">near a wall!</text>
+   ${CAP('Same stance, eyes closed — stay next to something to grab')}
+ </svg>`
+};
+
+
+/* ================= FACTS ================= */
+const FACTS=[
+ 'Your foot has 26 bones — over a quarter of all the bones in your body are in your feet.',
+ 'Your calves work like a second heart, pumping blood back up from your legs with every raise.',
+ 'Proprioception is your body\u2019s internal GPS — balance training literally rewires it after ankle injuries.',
+ 'Your Achilles tendon handles forces up to 4\u00d7 your body weight just from walking.',
+ 'Ankle sprains are the single most common sports injury — rehab like this massively cuts re-injury risk.',
+ 'Researchers use single-leg balance time as a predictor of healthy ageing. You\u2019re training for old-you too.',
+ 'The tibialis anterior stops your foot slapping the ground when you walk — stronger shin, smoother stride.',
+ 'Balance is much harder with eyes closed because vision normally does most of the work — that\u2019s the point.',
+ 'Slow lowering (eccentric) reps build tendon strength better than fast reps. Take your time down.',
+ 'Each of your feet has roughly 200,000 nerve endings.',
+ 'Muscles adapt in weeks, tendons take months — consistency beats intensity every time.',
+ 'Every wobble is your nervous system making thousands of micro-corrections per second. Wobble = training.',
+ 'Slow calf raises recruit the soleus — the endurance muscle firing on every single step you take.',
+ 'After a sprain, your brain partly \u201cforgets\u201d the ankle. Rehab retrains the brain as much as the joint.',
+ 'Doing balance work barefoot gives the sensors in your feet far richer feedback than trainers do.',
+ 'Stretching improves mostly because your nervous system learns to tolerate the range — keep showing up.',
+ 'Walking uses around 100 muscles, and a huge share of them are below your knee.',
+ 'Bone remodels under load — the resistance work you do now becomes stronger ankles in a few months.'
+];
+let factIdx=Math.floor(Math.random()*FACTS.length);
+function nextFact(){factIdx=(factIdx+1)%FACTS.length;const el=document.getElementById('fact-text');if(el)el.textContent=FACTS[factIdx];}
+
+/* ================= TIME ESTIMATE ================= */
+function exActiveSecs(ex){const s=ex.type==='hold'?ex.secs:Math.round(ex.reps*3);return ex.bilateral?s:2*s;}
+function exTotalSecs(ex){return ex.sets*exActiveSecs(ex)+(ex.sets-1)*REST_SECS;}
+function routineMins(){const t=EXERCISES.reduce((a,e)=>a+exTotalSecs(e),0)+(EXERCISES.length-1)*REST_SECS;return Math.round(t/60);}
+
+/* ================= PREVIEW MODAL ================= */
+function openPreview(i){
+  const ex=EXERCISES[i];
+  document.getElementById('modal-anim').innerHTML=ANIMS[ex.anim]();
+  document.getElementById('modal-title').textContent=ex.name;
+  const target=(ex.type==='reps'?ex.sets+' sets \u00d7 '+ex.reps+' reps':ex.sets+' \u00d7 '+ex.secs+'s holds')+(ex.bilateral?'':' \u2014 each side');
+  document.getElementById('modal-meta').innerHTML=
+    '<div class="meta-pill">'+target+'</div>'+
+    '<div class="meta-pill">~'+Math.max(1,Math.round(exTotalSecs(ex)/60))+' min</div>'+
+    '<div class="meta-pill lime">'+(ex.bilateral?'\ud83d\udc63 Both feet at once':'\u2194\ufe0f One side at a time')+'</div>'+
+    (ex.band?'<div class="meta-pill lime">&#127807; Resistance band</div>':'');
+  document.getElementById('modal-notes').innerHTML=ex.notes.map(n=>'<li>'+n+'</li>').join('');
+  document.getElementById('modal-back').classList.add('open');
+}
+document.getElementById('modal-close').onclick=()=>document.getElementById('modal-back').classList.remove('open');
+document.getElementById('modal-back').addEventListener('click',e=>{if(e.target.id==='modal-back')e.target.classList.remove('open');});
+
+/* ================= STORAGE ================= */
+const KEY='steady-ankle-v1';
+let state={streak:0,best:0,lastDate:null,history:[],total:0};
+const hasCloud=typeof window.storage!=='undefined'&&window.storage&&typeof window.storage.get==='function';
+async function loadState(){
+  try{
+    if(hasCloud){const r=await window.storage.get(KEY);if(r&&r.value)state=JSON.parse(r.value);}
+    else{const r=localStorage.getItem(KEY);if(r)state=JSON.parse(r);}
+  }catch(e){}
+  // streak decay check
+  if(state.lastDate){
+    const gap=daysBetween(state.lastDate,todayStr());
+    if(gap>1){state.streak=0;}
+  }
+  renderHome();
+}
+async function saveState(){
+  try{
+    if(hasCloud)await window.storage.set(KEY,JSON.stringify(state));
+    else localStorage.setItem(KEY,JSON.stringify(state));
+  }catch(e){console.error('save failed',e);}
+}
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function daysBetween(a,b){return Math.round((new Date(b)-new Date(a))/86400000);}
+function doneToday(){return state.lastDate===todayStr();}
+
+/* ================= HOME ================= */
+function renderHome(){
+  document.getElementById('streak-num').textContent=state.streak;
+  document.getElementById('stat-total').textContent=state.total;
+  document.getElementById('stat-best').textContent=state.best;
+  document.getElementById('stat-mins').textContent=state.total*routineMins();
+  const hour=new Date().getHours();
+  document.getElementById('greeting').textContent=(hour<12?'Morning':hour<17?'Afternoon':'Evening')+' — let\u2019s keep those ankles happy';
+  // ring
+  const pct=doneToday()?100:0;
+  const C=295.3;
+  document.getElementById('ring-fg').style.strokeDashoffset=C-(C*pct/100);
+  document.getElementById('ring-pct').textContent=pct+'%';
+  const btn=document.getElementById('start-btn');
+  if(doneToday()){
+    btn.textContent='✓ Done today — go again?';
+    btn.classList.add('done-state');
+    document.getElementById('ring-title').textContent='Nailed it';
+    document.getElementById('ring-sub').textContent='Session logged for today. Rest up, hydrate, and come back tomorrow.';
+  }else{
+    btn.textContent='Start today\u2019s session';
+    btn.classList.remove('done-state');
+    document.getElementById('ring-title').textContent='Today\u2019s session';
+    document.getElementById('ring-sub').textContent=EXERCISES.length+' exercises \u00b7 about '+routineMins()+' minutes. Tap any exercise below to preview it.';
+  }
+  // week dots
+  const wd=document.getElementById('week-dots');wd.innerHTML='';
+  const days=['M','T','W','T','F','S','S'];
+  const now=new Date();
+  const mondayOffset=(now.getDay()+6)%7;
+  for(let i=0;i<7;i++){
+    const d=new Date(now);d.setDate(now.getDate()-mondayOffset+i);
+    const ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const entry=state.history.filter(h=>h.date===ds).slice(-1)[0];
+    const hit=!!entry;
+    const part=hit&&entry.skipped&&entry.skipped.length>0;
+    const el=document.createElement('div');
+    el.className='wd'+(hit?(part?' hit part':' hit'):'')+(ds===todayStr()?' today':'');
+    el.innerHTML='<i>'+(hit?(part?'\u007e':'\u2713'):days[i])+'</i><span>'+days[i]+'</span>';
+    wd.appendChild(el);
+  }
+  // motivation
+  document.getElementById('moto-text').textContent=MOTOS[new Date().getDate()%MOTOS.length];
+  // trend
+  const tb=document.getElementById('trend-body');
+  const recent=state.history.filter(h=>h.pain!=null).slice(-14);
+  if(recent.length<2){tb.innerHTML='<div class="trend-empty">Log a couple of sessions and your pain trend will appear here — handy to show your doctor.</div>';}
+  else{
+    tb.innerHTML='<div class="trend-bars">'+recent.map(h=>{
+      const cls=h.pain>=7?'hi':h.pain>=4?'mid':'';
+      return '<div class="tb '+cls+'" style="height:'+Math.max(6,h.pain*10)+'%"></div>';
+    }).join('')+'</div><div class="trend-lbl">'+recent.map(h=>'<span>'+h.pain+'</span>').join('')+'</div>';
+  }
+  // exercise list
+  const list=document.getElementById('ex-list');list.innerHTML='';
+  EXERCISES.forEach(ex=>{
+    const row=document.createElement('div');row.className='ex-row';
+    const target=(ex.type==='reps'?ex.sets+' \u00d7 '+ex.reps+' reps':ex.sets+' \u00d7 '+ex.secs+'s')+(ex.bilateral?' \u00b7 both feet':' \u00b7 per side');
+    row.innerHTML='<div class="dot" style="background:#F0E9FF">'+ex.emoji+'</div><div><h4>'+ex.name+'</h4><p>'+target+(ex.band?' \u00b7 band':'')+'</p></div><div class="time-tag">~'+Math.max(1,Math.round(exTotalSecs(ex)/60))+'m</div><div class="chev">\u203a</div>';
+    row.onclick=()=>openPreview(EXERCISES.indexOf(ex));
+    list.appendChild(row);
+  });
+}
+
+/* ================= SESSION ENGINE ================= */
+let sess={ex:0,set:1,side:'L',phase:'ready',timer:null,remaining:0,startTime:null,skipped:[]};
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);}
+
+function startSession(){
+  sess={ex:0,set:1,side:'L',phase:'ready',timer:null,remaining:0,startTime:Date.now(),skipped:[]};
+  show('screen-session');renderStep();
+}
+function renderStep(){
+  clearInterval(sess.timer);
+  const ex=EXERCISES[sess.ex];
+  $('sess-prog').textContent='Exercise '+(sess.ex+1)+' of '+EXERCISES.length;
+  const track=$('seg-track');track.innerHTML='';
+  EXERCISES.forEach((_,i)=>{const s=document.createElement('div');s.className='seg'+(i<sess.ex?' done':i===sess.ex?' now':'');track.appendChild(s);});
+  $('set-chip').textContent='Set '+sess.set+' of '+ex.sets;
+  const sideL=sess.side==='L',sideName=sideL?'left':'right';
+  const sc=$('side-chip');
+  sc.classList.remove('right','both');
+  if(ex.bilateral){sc.textContent='BOTH feet together';sc.classList.add('both');}
+  else{sc.textContent=(sideL?'LEFT':'RIGHT')+' ankle';if(!sideL)sc.classList.add('right');}
+  $('band-chip').style.display=ex.band?'block':'none';
+  $('anim-holder').innerHTML=ANIMS[ex.anim]();
+  $('ex-title').textContent=ex.name;
+  $('ex-target').textContent=(ex.type==='reps'?ex.reps+' slow reps':ex.secs+' second hold')+(ex.bilateral?' \u2014 both feet at once':' \u2014 '+sideName+' ankle');
+  $('ex-notes').innerHTML=ex.notes.map(n=>'<li>'+n+'</li>').join('');
+  $('big-timer').style.display='none';
+  $('skip-btn').style.display='none';
+  $('skipex-btn').style.display='block';
+  nextFact();
+  $('timer-label').textContent='';
+  const btn=$('action-btn');btn.style.display='block';btn.classList.remove('lime');
+  if(ex.type==='hold'){btn.textContent='▶ Start '+ex.secs+'s hold'+(ex.bilateral?'':' — '+sideName);btn.onclick=startHold;}
+  else{btn.textContent=ex.bilateral?'✓ Set done ('+ex.reps+' reps)':'✓ '+(sideL?'Left':'Right')+' side done ('+ex.reps+' reps)';btn.classList.add('lime');btn.onclick=setComplete;}
+}
+function startHold(){
+  const ex=EXERCISES[sess.ex];
+  sess.remaining=ex.secs;
+  $('action-btn').style.display='none';
+  $('skipex-btn').style.display='none';
+  const t=$('big-timer');t.style.display='block';t.classList.remove('resting');t.textContent=sess.remaining;
+  $('timer-label').textContent='Hold it'+(ex.bilateral?'':' — '+(sess.side==='L'?'LEFT':'RIGHT'))+'… breathe';
+  sess.timer=setInterval(()=>{
+    sess.remaining--;
+    t.textContent=sess.remaining;
+    if(sess.remaining<=0){clearInterval(sess.timer);buzz();setComplete();}
+  },1000);
+}
+function setComplete(){
+  const ex=EXERCISES[sess.ex];
+  buzz();
+  if(!ex.bilateral&&sess.side==='L'){sess.side='R';renderStep();return;}
+  sess.side='L';
+  if(sess.set<ex.sets){sess.set++;startRest();}
+  else{
+    sess.set=1;sess.ex++;
+    if(sess.ex>=EXERCISES.length){finishSession();}
+    else{startRest(true);}
+  }
+}
+function startRest(nextEx){
+  clearInterval(sess.timer);
+  sess.remaining=REST_SECS;
+  const t=$('big-timer');t.style.display='block';t.classList.add('resting');t.textContent=sess.remaining;
+  $('timer-label').textContent=nextEx?'Rest — next exercise coming up':'Rest — next set coming up';
+  $('action-btn').style.display='none';
+  $('skip-btn').style.display='block';
+  $('skipex-btn').style.display='none';
+  nextFact();
+  $('skip-btn').onclick=()=>{clearInterval(sess.timer);renderStep();};
+  sess.timer=setInterval(()=>{
+    sess.remaining--;t.textContent=sess.remaining;
+    if(sess.remaining<=0){clearInterval(sess.timer);renderStep();}
+  },1000);
+}
+function buzz(){if(navigator.vibrate)navigator.vibrate(80);}
+
+/* ================= COMPLETE ================= */
+function finishSession(){
+  show('screen-done');
+  const first=!doneToday();
+  if(first){
+    if(state.lastDate&&daysBetween(state.lastDate,todayStr())===1)state.streak++;
+    else state.streak=1;
+    if(state.streak>state.best)state.best=state.streak;
+    state.lastDate=todayStr();
+    state.total++;
+  } else {state.total++;}
+  const ms={7:'ONE WEEK STREAK. Your ankles are officially in training. 🔥',14:'Two weeks straight — this is a habit now. 🔥🔥',30:'THIRTY DAYS. Absolute machine. 🏆',100:'100 days. Frame this. 👑'};
+  const nSkip=sess.skipped.length,nDone=EXERCISES.length-nSkip;
+  $('done-h').textContent=ms[state.streak]?'Day '+state.streak+'!':(nSkip?nDone+' of '+EXERCISES.length+' done':'Session complete!');
+  let msg=(ms[state.streak]||DONE_MSGS[Math.floor(Math.random()*DONE_MSGS.length)]);
+  if(nSkip){
+    const names=EXERCISES.filter(e=>sess.skipped.includes(e.id)).map(e=>e.name).join(', ');
+    msg='You skipped: '+names+'. Still counts — but tomorrow, full house?';
+    document.querySelector('.done-emoji').textContent='💪';
+  } else {document.querySelector('.done-emoji').textContent='🎉';}
+  $('done-p').textContent=msg+(first?' Streak: '+state.streak+' day'+(state.streak===1?'':'s')+'.':' (Bonus session — beast mode.)');
+  confetti();
+}
+$('pain-slider').addEventListener('input',e=>{$('pain-val').textContent=e.target.value;});
+$('save-btn').onclick=async()=>{
+  const pain=parseInt($('pain-slider').value,10);
+  state.history.push({date:todayStr(),pain:pain,skipped:sess.skipped.slice()});
+  if(state.history.length>90)state.history=state.history.slice(-90);
+  await saveState();
+  renderHome();show('screen-home');
+};
+
+/* ================= CONFETTI ================= */
+function confetti(){
+  const cv=$('confetti');const ctx=cv.getContext('2d');
+  cv.width=innerWidth;cv.height=innerHeight;
+  const cols=['#6C3BFF','#C9F24B','#FF6058','#3EDBD3','#FFB020'];
+  const ps=Array.from({length:120},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.5,r:4+Math.random()*6,c:cols[Math.floor(Math.random()*cols.length)],v:2+Math.random()*3.5,w:Math.random()*2-1,a:Math.random()*Math.PI}));
+  let frames=0;
+  (function tick(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(p=>{p.y+=p.v;p.x+=Math.sin(p.a+=0.05)*p.w;ctx.fillStyle=p.c;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*.6);ctx.restore();});
+    if(++frames<240)requestAnimationFrame(tick);else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+/* ================= WIRE UP ================= */
+$('skipex-btn').onclick=()=>{
+  clearInterval(sess.timer);
+  sess.skipped.push(EXERCISES[sess.ex].id);
+  sess.set=1;sess.side='L';sess.ex++;
+  if(sess.ex>=EXERCISES.length){finishSession();}else{renderStep();}
+};
+$('start-btn').onclick=startSession;
+$('quit-btn').onclick=()=>{clearInterval(sess.timer);renderHome();show('screen-home');};
+loadState();
+
+</script>
+
+</body>
+</html>
