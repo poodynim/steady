@@ -166,7 +166,8 @@ input[type=range]{width:100%;accent-color:var(--violet);height:34px}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
 
 
-.side-chip{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:14px;font-weight:800;padding:7px 18px;border-radius:99px;color:#fff;background:var(--aqua);letter-spacing:.05em;box-shadow:0 4px 12px rgba(62,219,211,.4)}
+.side-chip-row{display:flex;justify-content:center;margin:-6px 0 18px}
+.side-chip{font-size:14px;font-weight:800;padding:7px 18px;border-radius:99px;color:#fff;background:var(--aqua);letter-spacing:.05em;box-shadow:0 4px 12px rgba(62,219,211,.4)}
 .side-chip.right{background:var(--coral);box-shadow:0 4px 12px rgba(255,96,88,.4)}
 .side-chip.both{background:var(--lime);color:#3A5200;box-shadow:0 4px 12px rgba(201,242,75,.5)}
 /* ---------- preview modal & facts ---------- */
@@ -276,8 +277,8 @@ input[type=range]{width:100%;accent-color:var(--violet);height:34px}
     <div class="set-chip" id="set-chip">Set 1 of 3</div>
     <div class="band-chip" id="band-chip" style="display:none">🟢 Band</div>
     <div id="anim-holder"></div>
-    <div class="side-chip" id="side-chip">LEFT ankle</div>
   </div>
+  <div class="side-chip-row"><div class="side-chip" id="side-chip">LEFT ankle</div></div>
 
   <h2 class="ex-title" id="ex-title"></h2>
   <div class="ex-target" id="ex-target"></div>
